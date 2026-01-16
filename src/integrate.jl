@@ -22,7 +22,7 @@ function gauss_legendre_nodes_weights(n; tol=1e-14)
     w = zeros(n)
     
     for i in 1:n
-        x0 = cos(π*(i - 0.25)/(n + 0.5))
+        x0 = cos(pi*(i - 0.25)/(n + 0.5))
         xi = x0
         while true
             dx = legendreP(n, xi)/legendrePprime(n, xi)
@@ -38,16 +38,12 @@ function gauss_legendre_nodes_weights(n; tol=1e-14)
     return x, w
 end
 
-f(x) = x^2
-n = 3
-x, w = gauss_legendre_nodes_weights(n)
 
-I = sum(w .* f.(x))
-println("Całka na [-1,1]: ", I)
-
-# dla przedziału [a,b]
-a, b = 0, 2
-x_scaled = (b-a)/2 .* x .+ (a+b)/2
-w_scaled = (b-a)/2 .* w
-I2 = sum(w_scaled .* f.(x_scaled))
-println("Całka na [0,2]: ", I2)
+function integrate(f, a, b)
+    n = 3
+    x, w = gauss_legendre_nodes_weights(n)
+    x_scaled = (b-a)/2 .* x .+ (a+b)/2
+    w_scaled = (b-a)/2 .* w
+    I2 = sum(w_scaled .* f.(x_scaled))
+    return I2
+end
