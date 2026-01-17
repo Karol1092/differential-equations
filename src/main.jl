@@ -48,4 +48,6 @@ function solve(n)
     readline()
 end
 
-solve(15)
+print("n = ")
+n = parse(Int, readline())
+solve(n)
