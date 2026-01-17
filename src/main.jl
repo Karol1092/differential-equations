@@ -18,18 +18,18 @@ function solve(n)
     de1 = -1/h
     de2 = 1/h
 
-        for e in 1:n
-            i, j = e, e + 1
-            xa, xb = nodes[i], nodes[j]
+    for e in 1:n
+        i, j = e, e + 1
+        xa, xb = nodes[i], nodes[j]
 
-            K[i, i] += integrate_split(x -> k(x) * de1 * de1, xa, xb)
-            K[i, j] += integrate_split(x -> k(x) * de2 * de1, xa, xb)
-            K[j, i] += integrate_split(x -> k(x) * de1 * de2, xa, xb)
-            K[j, j] += integrate_split(x -> k(x) * de2 * de2, xa, xb)
+        K[i, i] += integrate_split(x -> k(x) * de1 * de1, xa, xb)
+        K[i, j] += integrate_split(x -> k(x) * de2 * de1, xa, xb)
+        K[j, i] += integrate_split(x -> k(x) * de1 * de2, xa, xb)
+        K[j, j] += integrate_split(x -> k(x) * de2 * de2, xa, xb)
 
-            F[i] += integrate_split(x -> -k(x) * 1.0 * de1, xa, xb)
-            F[j] += integrate_split(x -> -k(x) * 1.0 * de2, xa, xb)
-        end
+        F[i] += integrate_split(x -> -k(x) * 1.0 * de1, xa, xb)
+        F[j] += integrate_split(x -> -k(x) * 1.0 * de2, xa, xb)
+    end
 
     K[1, 1] += 0.5
     F[1] -= 0.5
