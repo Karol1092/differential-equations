@@ -1,18 +1,10 @@
 using Plots, LinearAlgebra
-include("integrate.jl")
+include("integration.jl")
 
 gr()
 
 function k(x)
     return x <= 1.0 ? 0.5 : 1.0
-end
-
-function integrate_split(f, ax, bx)
-    if ax < 1 < bx
-        return integrate(f, ax, 1) + integrate(f, 1, bx)
-    else
-        return integrate(f, ax, bx)
-    end
 end
 
 function solve(n)
