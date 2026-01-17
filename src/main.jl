@@ -7,6 +7,14 @@ function k(x)
     return x <= 1.0 ? 0.5 : 1.0
 end
 
+function integrate_split(f, ax, bx)
+    if ax < 1 < bx
+        return integrate(f, ax, 1) + integrate(f, 1, bx)
+    else
+        return integrate(f, ax, bx)
+    end
+end
+
 function solve(n)
     L = 3.0
     h = L / n
@@ -15,21 +23,21 @@ function solve(n)
     K = zeros(n + 1, n + 1)
     F = zeros(n + 1)
 
-    for e in 1:n
-        i, j = e, e + 1
-        xa, xb = nodes[i], nodes[j]
+    de1 = -1/h
+    de2 = 1/h
 
-        e1 = -1/h
-        e2 = 1/h
+        for e in 1:n
+            i, j = e, e + 1
+            xa, xb = nodes[i], nodes[j]
 
-        K[i, i] += integrate(x -> k(x) * e1 * e1, xa, xb)
-        K[i, j] += integrate(x -> k(x) * e2 * e1, xa, xb)
-        K[j, i] += integrate(x -> k(x) * e1 * e2, xa, xb)
-        K[j, j] += integrate(x -> k(x) * e2 * e2, xa, xb)
+            K[i, i] += integrate_split(x -> k(x) * de1 * de1, xa, xb)
+            K[i, j] += integrate_split(x -> k(x) * de2 * de1, xa, xb)
+            K[j, i] += integrate_split(x -> k(x) * de1 * de2, xa, xb)
+            K[j, j] += integrate_split(x -> k(x) * de2 * de2, xa, xb)
 
-        F[i] += integrate(x -> -k(x) * 1.0 * e1, xa, xb)
-        F[j] += integrate(x -> -k(x) * 1.0 * e2, xa, xb)
-    end
+            F[i] += integrate_split(x -> -k(x) * 1.0 * de1, xa, xb)
+            F[j] += integrate_split(x -> -k(x) * 1.0 * de2, xa, xb)
+        end
 
     K[1, 1] += 0.5
     F[1] -= 0.5
@@ -41,10 +49,6 @@ function solve(n)
     w = K \ F
 
     u = w .+ nodes
-    
-    # display(K)
-    # display(F)
-    # println(u)
 
     p = plot(nodes, u, label="u(x) - MES", marker=:circle, gui = true)
     display(p)
@@ -52,4 +56,4 @@ function solve(n)
     readline()
 end
 
-solve(3)
+solve(15)
