@@ -1,2 +1,2 @@
-# differential-equations
-Differential equations project for AGH course.
+# Differential equations
+## Finite Element Method Solver for Heat Transfer Equation
